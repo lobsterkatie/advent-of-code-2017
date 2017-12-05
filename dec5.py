@@ -77,8 +77,8 @@ def count_jumps(jump_str):
     #count how many jumps it takes
     jump_count = 0
 
-    #keep going until we break out of the bound of the jump list
-    while 0  <= current_index < len(jumps):
+    #keep going until we break out of the bounds of the jump list
+    while 0 <= current_index < len(jumps):
 
         #figure out how far we need to jump
         next_jump = jumps[current_index]
@@ -110,8 +110,8 @@ def count_jumps2(jump_str):
     #count how many jumps it takes
     jump_count = 0
 
-    #keep going until we break out of the bound of the jump list
-    while 0  <= current_index < len(jumps):
+    #keep going until we break out of the bounds of the jump list
+    while 0 <= current_index < len(jumps):
 
         #figure out how far we need to jump
         next_jump = jumps[current_index]
