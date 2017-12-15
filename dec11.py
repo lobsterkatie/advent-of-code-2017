@@ -1,4 +1,45 @@
+"""--- Day 11: Hex Ed ---
 
+Crossing the bridge, you've barely reached the other side of the stream when a
+program comes up to you, clearly in distress. "It's my child process," she
+says, "he's gotten lost in an infinite grid!"
+
+Fortunately for her, you have plenty of experience with infinite grids.
+
+Unfortunately for you, it's a hex grid.
+
+The hexagons ("hexes") in this grid are aligned such that adjacent hexes can
+be found to the north, northeast, southeast, south, southwest, and northwest:
+
+  \ n  /
+nw +--+ ne
+  /    \
+-+      +-
+  \    /
+sw +--+ se
+  / s  \
+
+You have the path the child process took. Starting where he started, you need
+to determine the fewest number of steps required to reach him. (A "step" means
+to move from the hex you are in to any adjacent hex.)
+
+For example:
+
+    ne,ne,ne is 3 steps away.
+    ne,ne,sw,sw is 0 steps away (back where you started).
+    ne,ne,s,s is 2 steps away (se,se).
+    se,sw,se,sw,sw is 3 steps away (s,s,sw).
+
+Your puzzle answer was 650.
+
+
+--- Part Two ---
+
+How many steps away is the furthest he ever got from his starting position?
+
+Your puzzle answer was 1465.
+
+"""
 
 #thought: use polar coords - staring hexagon is (0,0), ring around that is
 #(1, pi/6), (1, 3pi/6), (1, 5pi/6), (1, 7pi/6), (1, 9pi/6), and (1, 11pi/6)
@@ -67,21 +108,17 @@ def make_one_hop(current_location, direction):
     current_location[1] += y_delta
 
 
-def compute_hex_hop_dist(hops):
-    """Given a list of hops (either N, S, NE, NW, SE, or SW), determine how far
-       the hopper is (in number of hops) from the starting location."""
+def find_distance_home(current_location):
+    """Computes the distance back to the origin without modifying
+       current_location."""
 
-    #starting at the origin, follow the hops
-    current_location = [0, 0]
-    for hop_direction in hops:
-        make_one_hop(current_location, hop_direction)
+    temp_location = current_location[:]
 
-    #figure out how far we are from home
     hops_to_home = 0
 
     #figure out what quadrant we're in, then head back to the origin until
     #we either hit it or hit the x- or y-axis (one of the coords is zero)
-    current_x, current_y = current_location
+    current_x, current_y = temp_location
 
     #as long as we're not yet on one of the axes, head towards the origin
     #diagonally
@@ -98,25 +135,58 @@ def compute_hex_hop_dist(hops):
             direction = "NW"
 
         #make one jump
-        make_one_hop(current_location, direction)
+        make_one_hop(temp_location, direction)
         hops_to_home += 1
-        current_x, current_y = current_location
+        current_x, current_y = temp_location
 
     #at this point we should be on at least one of the axes (at least one of
     #the coordinates should be zero) so the quickest path is to head along that
     #axis, meaning the non-zero coordinate is the number of jumps to home
-    axis_hops_to_home = current_location[0] or current_location[1]
-    hops_to_home += axis_hops_to_home
+    axis_hops_to_home = temp_location[0] or temp_location[1]
+    hops_to_home += abs(axis_hops_to_home)
 
     #return the answer
     return hops_to_home
 
 
 
+def compute_hex_hop_dist(hops):
+    """Given a list of hops (either N, S, NE, NW, SE, or SW), determine how far
+       the hopper is (in number of hops) from the starting location after all
+       hops have been hopped."""
+
+    #starting at the origin, follow the hops
+    current_location = [0, 0]
+    for hop_direction in hops:
+        make_one_hop(current_location, hop_direction)
+
+    #figure out how far we are from home and return the answer
+    hops_home = find_distance_home(current_location)
+    print current_location, hops_home
+    return hops_home
+
+
+def find_max_hop_distance(hops):
+    """Given a list of hops (either N, S, NE, NW, SE, or SW), determine the
+       farthest the hopper is (in number of hops) from the starting location.
+    """
+
+    #starting at the origin, follow the hops, keeping track of max distance
+    #from home
+    max_dist = 0
+    current_location = [0, 0]
+    for hop_direction in hops:
+        make_one_hop(current_location, hop_direction)
+        dist = find_distance_home(current_location)
+        max_dist = max(dist, max_dist)
+
+    return max_dist
+
 
 with open("dec11.txt") as input_file:
     hops = [hop.upper() for hop in input_file.read().split(",")]
     print compute_hex_hop_dist(hops)
+    print find_max_hop_distance(hops)
 
 
 
