@@ -202,8 +202,6 @@ def count_regions(key_str):
 print find_num_used_squares("amgozmfv")
 print count_regions("amgozmfv")
 
-
-
 ########## testing part 1 ############
 
 # def translate(hash_str):
