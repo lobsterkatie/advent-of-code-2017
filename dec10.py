@@ -259,8 +259,9 @@ def compute_hash_hex(input_str):
     return hash_str
 
 
+if __name__ == '__main__':
+    print find_knot_hash_product([147, 37, 249, 1, 31, 2, 226, 0, 161, 71, 254,
+                                  243, 183, 255, 30, 70])
 
-print find_knot_hash_product([147, 37, 249, 1, 31, 2, 226, 0, 161, 71, 254,
-                              243, 183, 255, 30, 70])
-
-print compute_hash_hex("147,37,249,1,31,2,226,0,161,71,254,243,183,255,30,70")
+    print compute_hash_hex(
+            "147,37,249,1,31,2,226,0,161,71,254,243,183,255,30,70")
